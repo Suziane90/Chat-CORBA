@@ -4,32 +4,38 @@ import sys
 
 class ChatServer_i(Chat.ChatServer):
     def __init__(self):
-        self.messages = {}
+        self.messages = []
 
-    def sendMessage(self, username, message):
-        if username not in self.messages:
-            self.messages[username] = []
-        self.messages[username].append(message)
+    def sendMessage(self, message):
+        print(f"Received message: {message}")
+        self.messages.append(message)
 
-    def receiveMessage(self, username):
-        if username in self.messages:
-            if self.messages[username]:
-                return self.messages[username].pop(0)
-        return ""
+    def receiveMessage(self):
+        if self.messages:
+            return self.messages.pop(0)
+        else:
+            return ""
 
 # Inicialize o ORB
 orb = CORBA.ORB_init(sys.argv, CORBA.ORB_ID)
 
 # Crie uma instância do servidor de chat
-chat_server = ChatServer_i()
+Chat_Server = ChatServer_i()
 
 # Obtém a referência do objeto
 obj = orb.resolve_initial_references("RootPOA")._get_the_POAManager()
-obj.activate()
+poa_manager = obj.activate()
+poa = orb.resolve_initial_references("RootPOA")
 
-# Registre o servidor no serviço de nomes
-chat_obj = chat_server._this()
+# Ative o servidor de chat
+poaManager = poa._get_the_POAManager()
+poaManager.activate()
+poa.servant_to_reference(Chat_Server)
 
 # Aguarde chamadas de clientes
 orb.run()
 
+
+# Imprima o IOR
+ior = orb.object_to_string(Chat_Server._this())
+print("IOR do servidor:", ior)

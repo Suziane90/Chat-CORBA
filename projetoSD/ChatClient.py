@@ -5,31 +5,25 @@ import sys
 # Inicialize o ORB
 orb = CORBA.ORB_init(sys.argv, CORBA.ORB_ID)
 
-# Obtenha a referência do objeto do serviço de nomes
-obj = orb.resolve_initial_references("NameService")._narrow(CORBA.CORBA_Object)
-
-if obj is None:
-    print("Erro: Não foi possível obter a referência do objeto.")
-    sys.exit(1)
+# Obtenha o IOR do servidor do outro computador
+server_ior = input("Digite o IOR do servidor: ")
 
 # Estreite a referência do objeto para a interface de chat
-chat_obj = obj.resolve_initial_references("ChatServer")._narrow(Chat.ChatServer)
+obj = orb.string_to_object(server_ior)
+chat_obj = obj._narrow(Chat.ChatServer)
 
 if chat_obj is None:
-    print("Erro: Referência do objeto de chat inválida.")
+    print("Erro: Referência do objeto inválida.")
     sys.exit(1)
 
 # Interaja com o servidor de chat
-username = input("Digite seu nome de usuário: ")
-
 while True:
     message = input("Digite uma mensagem (ou 'exit' para sair): ")
     if message.lower() == 'exit':
         break
-    chat_obj.sendMessage(username, message)
-    received_message = chat_obj.receiveMessage(username)
-    if received_message:
-        print(f"Received message: {received_message}")
+    chat_obj.sendMessage(message)
+    received_message = chat_obj.receiveMessage()
+    print(f"Received message from server: {received_message}")
 
 # Encerre o ORB
 orb.shutdown(True)

@@ -11,3 +11,5 @@ import Chat_idl
 # ** 2. Sub-modules
 
 # ** 3. End
+class ChatServer:
+    pass

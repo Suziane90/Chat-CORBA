@@ -1,6 +1,6 @@
 import threading
 import socket
-alias = input('Choose an alias >>> ')
+alias = input('Escolha um apelido >>> ')
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 59000))
 
@@ -8,12 +8,12 @@ def client_receive():
     while True:
         try:
             message = client.recv(1024).decode('utf-8')
-            if message == "alias?":
+            if message == "apelido?":
                 client.send(alias.encode('utf-8'))
             else:
                 print(message)
         except:
-            print('Error!')
+            print('Erro!')
             client.close()
             break
 

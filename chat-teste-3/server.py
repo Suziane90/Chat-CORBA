@@ -1,4 +1,4 @@
-'Chat Room Connection - Client-To-Client'
+'Conexão de sala de bate-papo - cliente a cliente'
 import threading
 import socket
 host = '127.0.0.1'
@@ -13,7 +13,7 @@ def broadcast(message):
     for client in clients:
         client.send(message)
 
-# Function to handle clients'connections
+# Função para lidar com conexões de clientes
 
 def handle_client(client):
     while True:
@@ -25,23 +25,23 @@ def handle_client(client):
             clients.remove(client)
             client.close()
             alias = aliases[index]
-            broadcast(f'{alias} has left the chat room!'.encode('utf-8'))
+            broadcast(f'{alias} saiu do bate-papo!'.encode('utf-8'))
             aliases.remove(alias)
             break
-# Main function to receive the clients connection
+# Função principal para receber a conexão dos clientes
 
 def receive():
     while True:
-        print('Server is running and listening ...')
+        print('Servidor rodando e ouvindo ...')
         client, address = server.accept()
-        print(f'connection is established with {str(address)}')
-        client.send('alias?'.encode('utf-8'))
+        print(f'conexão estabelecida com {str(address)}')
+        client.send('apelido?'.encode('utf-8'))
         alias = client.recv(1024)
         aliases.append(alias)
         clients.append(client)
-        print(f'The alias of this client is {alias}'.encode('utf-8'))
-        broadcast(f'{alias} has connected to the chat room'.encode('utf-8'))
-        client.send('you are now connected!'.encode('utf-8'))
+        print(f'O apelido desse cliente é {alias}'.encode('utf-8'))
+        broadcast(f'{alias} está conectado neste bate-papo'.encode('utf-8'))
+        client.send('agora você está conectado!'.encode('utf-8'))
         thread = threading.Thread(target=handle_client, args=(client,))
         thread.start()
 

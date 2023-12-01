@@ -1,0 +1,8 @@
+module ChatApp {
+
+  interface Chat {
+    void sendMessage(in string message, in string sender);
+    string receiveMessage();
+  };
+
+};

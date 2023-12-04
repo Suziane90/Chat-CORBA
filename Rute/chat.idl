@@ -1,9 +1,0 @@
-module ChatApp {
-  interface Chat {
-    void sendMessage(in string username, in string message);
-    string receiveMessage();
-    void entrarNoChat(in string username);
-    void leaveChat(in string username);
-    string listUsers();
-  };
-};

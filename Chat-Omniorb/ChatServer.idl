@@ -1,0 +1,12 @@
+idl
+module ChatApp {
+    interface ChatServer {
+        void registerClient(in ChatApp.ChatClient client);
+        void sendMessage(in string sender, in string message);
+        sequence<string> getConnectedClients();
+    };
+
+    interface ChatClient {
+        void receiveMessage(in string sender, in string message);
+    };
+};

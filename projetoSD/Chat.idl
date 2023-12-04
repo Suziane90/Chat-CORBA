@@ -1,6 +1,0 @@
-module Chat {
-    interface ChatServer {
-        void sendMessage(in string message);
-        string receiveMessage();
-    };
-};

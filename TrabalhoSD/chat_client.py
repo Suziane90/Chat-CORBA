@@ -1,30 +1,40 @@
-from omniORB import CORBA
-from chat import ChatApp
 import sys
+from omniORB import CORBA, PortableServer
+import ChatApp, ChatApp__POA
 
 try:
     orb = CORBA.ORB_init(sys.argv, CORBA.ORB_ID)
-    ior = sys.argv[1]
-    obj = orb.string_to_object(ior)
+    ior = input("Digite o IOR do servidor: ")
 
-    chat = obj._narrow(ChatApp.Chat)
+    obj = orb.string_to_object(ior)
+    chat = obj._narrow(ChatApp.ChatServer)
+
     if chat is None:
-        print("Object reference is not a Chat")
+        print("Referência de objeto não é um ChatServer")
         sys.exit(1)
 
+    username = input("Digite seu nome de usuário: ")
+    chatClient = ChatApp.ChatClient_i()
+
+    # Registra o cliente no servidor
+    chat.registerClient(username, chatClient)
+
+    print(f"Bem-vindo ao chat, {username}!")
+
     while True:
-        message = input("Enter your message (type 'exit' to quit): ")
+        message = input("Digite sua mensagem (digite 'exit' para sair): ")
 
         if message.lower() == 'exit':
             break
 
-        chat.sendMessage(message, "Client")
-        received_message = chat.receiveMessage()
-        print(f"Received message: {received_message}")
+        # Envia a mensagem para o servidor
+        chat.sendMessage(username, message)
 
 except CORBA.Exception as ex:
-    print(f"CORBA Exception: {ex}")
+    print(f"Exceção CORBA: {ex}")
 except Exception as e:
-    print(f"An unexpected error occurred: {e}")
+    print(f"Ocorreu um erro inesperado: {e}")
 finally:
+    # Remove o cliente quando ele sai
+    chat.unregisterClient(username)
     orb.destroy()

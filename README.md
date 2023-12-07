@@ -7,6 +7,8 @@ Repositorio dedicado para o trabalho final da disciplina Sistemas Distribuidos
 <br>
 <a href="https://trello.com/invite/b/e0APAaHU/ATTI0700b71c20bc8478ae28453d405c12ee7B638232/controle-de-tarefas">Nosso Trello</a>
 
+## Tutorial de como rodar a aplicação
+
 ### 1. Crie e ative um ambiente CONDA em ambos os computadores:
 
     conda create -n omni-env -c conda-forge python=3.10 omniorb omniorbpy
